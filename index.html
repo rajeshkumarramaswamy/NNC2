@@ -1,0 +1,158 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Dashboard - NNC</title>
+
+    <!-- Bootstrap core CSS -->
+  <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+  <!--<link href="/static/css/custom.css" rel="stylesheet">-->
+  <link href="/static/css/navbar-fixed-top.css" rel="stylesheet">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.0/jquery-ui.js"></script>
+  <style>
+        div#select1{
+            float: left;
+            padding-top: 20px;
+            margin-left: 30px;
+        }
+        div#select2{
+            float: left;
+            padding-left: 20px;
+        }
+	div#select3{
+	    float: left;
+	    padding-left: 20px;		
+	}
+  </style>
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.html"><strong>Netenrich Nerve Center</strong></a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li class="dropdown">
+            </li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li><a href="#">Dashboard</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div id="select1">
+    <p><strong>Select NOC</strong></p>
+        <select id="json-one">
+		<option>--Select--</option>
+		{% for key, value in noc_data %}
+		<option value="{{value}}" id="nid">{{value}}</option>
+		{% endfor %}
+        </select>
+    </div>
+		<br />
+
+	<div id="select2">
+        <p><strong>Select Partner</strong></p>
+        <select id="json-two">
+		<option>--Select--</option>
+		{% for p_r_id, nc_id, p_r_name in partner_data %}
+		<option value="{{key}}" p_nid="{{nc_id}}" p_pid="{{p_r_id}}" >{{p_r_name}}</option>
+		{% endfor %}
+	</select>
+    </div>
+    <div id="select3">
+	<p><strong>Select Client</strong></p>
+	<select id="json-three">
+		<option>--Select--</option>
+	        {% for c_r_id, nc_id, p_r_id, c_r_name in client_data %}
+		<option value='{{key}}' c_nid="{{nc_id}}" c_pid="{{p_r_id}}" >{{c_r_name}}</option>
+		{% endfor %}  	
+	</select>
+    </div>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+      <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+	<script type='text/javascript'>
+		$(function(){
+
+			var mydict = {{ noc_partner | safe }};
+			var mymydict = {{ noc_client | safe }};
+			var mymymydict = {{ partner_client | safe }};
+
+
+			$('#json-one').change(function() {
+				var i = $('#json-one').val();
+				
+
+				var $jsontwo = $("#json-two");
+				$jsontwo.empty();
+
+				var $jsonthree = $("#json-three");
+				$jsonthree.empty();
+
+				vals = mydict[i];
+				vvals = mymydict[i];
+
+				$jsontwo.append("<option>--Select--</option>");
+				$.each(vals, function(index, value){
+                                                $jsontwo.append("<option>" +value+ "</option>");
+                                        });
+
+				$jsonthree.append("<option>--Select--</option>");
+				$.each(vvals, function(index, value){
+                                                $jsonthree.append("<option>" +value+ "</option>");
+                                        });
+
+				
+
+			});
+			$('#json-two').change(function() {
+			
+			var i = $('#json-two').val();
+			
+			var $jsonthree = $("#json-three");
+                                $jsonthree.empty();
+
+			vvvals= mymymydict[i];
+			$jsonthree.append("<option>--Select--</option>");
+
+			$.each(vvvals, function(index, value){
+				$jsonthree.append("<option>" +value+ "</option>");
+                                        });
+
+
+			});
+
+				
+
+		});
+	</script>
+    {% block content %} {% endblock %}
+    {% block footer %}{% endblock %}
+  </body>
+</html>
